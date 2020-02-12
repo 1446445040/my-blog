@@ -1,6 +1,9 @@
 const BundleAnalyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const LodashWebpackPlugin = require('lodash-webpack-plugin')
+const webpack = require('webpack')
+const library = require('./dll/library.js')
+const DllPath = './public/vendors'
 
 module.exports = {
   configureWebpack: config => {
@@ -13,6 +16,14 @@ module.exports = {
         }
       }
     })
+    config.plugins.push(
+      ...Object.keys(library).map(vendor => {
+        return new webpack.DllReferencePlugin({
+          context: __dirname,
+          manifest: require(`${DllPath}/${vendor}-manifest.json`)
+        })
+      })
+    )
   },
   chainWebpack: config => {
     config.optimization.splitChunks({
@@ -30,11 +41,8 @@ module.exports = {
       config.externals({
         marked: 'marked',
         moment: 'moment',
-        vue: 'Vue',
-        jquery: '$',
-        'vue-router': 'VueRouter',
-        'highlight.js': 'hljs',
-        'element-ui': 'ELEMENT'
+        jquery: '$'
+        // 'vue-design': 'ViewUI',
       })
       config.plugin('analyzer').use(BundleAnalyzer).end()
       config.plugin('compress').use(CompressionWebpackPlugin, [{

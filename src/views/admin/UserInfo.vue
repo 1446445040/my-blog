@@ -66,23 +66,14 @@ export default {
         date: this.userInfo.date || Date.now()
       }).then(({ data }) => {
         if (data.upserted) {
-          this.$message({
-            type: 'warning',
-            message: '重复数据',
-            showClose: true
-          })
+          this.$Message.warning('重复数据')
         } else {
-          this.$message({
-            type: 'success',
-            message: '修改成功',
-            showClose: true
-          })
+          this.$Message.success('修改成功')
         }
       }).catch(e => {
-        this.$message({
-          type: 'error',
-          message: '保存失败',
-          showClose: true
+        this.$Message.error({
+          content: '保存失败',
+          background: true
         })
       })
     }
