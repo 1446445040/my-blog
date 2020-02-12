@@ -1,19 +1,29 @@
 <template>
-  <div class="page">
-    <header>
-      <h1>信息管理</h1>
-    </header>
-    <aside>
-      <router-link to="/admin/list">文章列表</router-link>
-      <router-link to="/admin/add">添加文章</router-link>
-      <router-link to="/admin/user">个人信息</router-link>
-    </aside>
-    <main>
-      <keep-alive>
-        <router-view />
-      </keep-alive>
-    </main>
-  </div>
+  <Layout>
+    <Header>
+      <Menu active-name="1-2" theme="dark" width="auto" mode="horizontal">
+        <menu-item name="1-1" to="/admin/list" :replace="true">
+          <Icon type="ios-navigate"/>
+          <span>文章列表</span>
+        </menu-item>
+        <menu-item name="1-2" to="/admin/add" :replace="true">
+          <Icon type="ios-search"/>
+          <span>添加文章</span>
+        </menu-item>
+        <menu-item name="1-3" to="/admin/user" :replace="true">
+          <Icon type="ios-settings"/>
+          <span>个人信息</span>
+        </menu-item>
+      </Menu>
+    </Header>
+    <Content>
+      <Card dis-hover>
+        <keep-alive>
+          <router-view />
+        </keep-alive>
+      </Card>
+    </Content>
+  </Layout>
 </template>
 
 <script>

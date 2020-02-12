@@ -1,55 +1,48 @@
 <template>
-  <div class="page">=
-    <el-form
-      class="form"
-      ref="form"
-      label-width="80px"
-      :model="form"
-    >
-      <el-form-item label="标题">
-        <el-input v-model="form.title"></el-input>
-      </el-form-item>
-      <el-form-item label="标签">
-        <el-tag
+  <div class="page">
+    <Form class="form" :model="form">
+      <form-item label="标题">
+        <Input v-model="form.title" />
+      </form-item>
+      <form-item label="标签">
+        <Tag
           v-for="(tag, index) in form.tags"
           :key="index"
           closable
-          :disable-transitions="false"
-          @close="handleClose(index, tag)">
+          type="dot"
+          @on-close="handleClose(index, tag)">
           {{tag}}
-        </el-tag>
-        <el-input
+        </Tag>
+        <Input
           class="input-new-tag"
           v-if="inputVisible"
           v-model="inputValue"
           ref="saveTagInput"
-          size="small"
           @keyup.enter.native="handleInputConfirm"
           @blur="handleInputConfirm"
         />
-        <el-button
+        <Button
           v-else
           class="button-new-tag"
           size="small"
           @click="showInput"
-        >+ New Tag</el-button>
-      </el-form-item>
-      <el-form-item label="内容">
-        <el-input
+        >+ New Tag</Button>
+      </form-item>
+      <form-item label="内容">
+        <Input
           class="content-input"
           type="textarea"
-          rows="12"
-          resize="none"
           v-model="form.content"
+          :rows="12"
         />
-      </el-form-item>
-      <el-form-item>
-        <el-button
+      </form-item>
+      <form-item>
+        <Button
           type="primary"
           @click="onSubmit"
-        >立即创建</el-button>
-      </el-form-item>
-    </el-form>
+        >立即创建</Button>
+      </form-item>
+    </Form>
   </div>
 </template>
 
@@ -72,25 +65,17 @@ export default {
   },
   methods: {
     onSubmit () {
-      this.$prompt('请输入密码', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(({ value }) => {
-        return addArticle({
-          ...this.form,
-          summary: this.createSummary(),
-          date: Date.now(),
-          password: value
-        })
+      addArticle({
+        ...this.form,
+        summary: this.createSummary(),
+        date: Date.now(),
+        password: prompt('请输入密码')
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '添加成功'
-        })
+        this.$Message.success('添加成功')
       }).catch(e => {
-        this.$message({
-          type: 'error',
-          message: '添加失败'
+        this.$Message.error({
+          content: '添加失败',
+          background: true
         })
       })
     },
@@ -132,12 +117,6 @@ export default {
     max-width 90%
     margin 0 auto
     padding 20px
-    border-radius 5px
-  .page-header
-    padding 20px 0
-  >>> .el-tag {
-    margin-right: 10px;
-  }
   .button-new-tag {
     height: 32px;
     line-height: 30px;

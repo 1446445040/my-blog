@@ -1,32 +1,29 @@
 <template>
-  <el-form
-    class="form"
-    ref="form"
-    label-width="80px"
-    :model="form"
-  >
-    <el-form-item label="头像地址">
-      <el-input v-model="form.title"/>
-    </el-form-item>
-    <el-form-item label="姓名">
-      <el-input v-model="form.name"/>
-    </el-form-item>
-    <el-form-item label="年龄">
-      <el-input v-model="form.age"/>
-    </el-form-item>
-    <el-form-item label="位置">
-      <el-input v-model="form.location"/>
-    </el-form-item>
-    <el-form-item label="简介">
-      <el-input v-model="form.description"/>
-    </el-form-item>
-    <el-form-item>
-      <el-button
-        type="primary"
-        @click="onSubmit"
-      >保存</el-button>
-    </el-form-item>
-  </el-form>
+  <div class="info-page">
+    <Form class="form" :model="form">
+      <form-item label="头像地址">
+        <Input v-model="form.avatar"/>
+      </form-item>
+      <form-item label="姓名">
+        <Input v-model="form.name"/>
+      </form-item>
+      <form-item label="年龄">
+        <Input v-model="form.age"/>
+      </form-item>
+      <form-item label="位置">
+        <Input v-model="form.location"/>
+      </form-item>
+      <form-item label="简介">
+        <Input v-model="form.description"/>
+      </form-item>
+      <form-item>
+        <Button
+          type="primary"
+          @click="onSubmit"
+        >保存</Button>
+      </form-item>
+    </Form>
+  </div>
 </template>
 
 <script>
@@ -97,5 +94,8 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-
+ .info-page
+   max-width 90%
+   margin 0 auto
+   padding 20px
 </style>
