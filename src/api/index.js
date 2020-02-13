@@ -1,6 +1,6 @@
 import axios from 'axios'
-// const baseUrl = 'http://localhost:3000'
-const baseUrl = 'http://www.biubiubius.com:3000'
+// const baseUrl = 'https://localhost'
+const baseUrl = 'https://www.biubiubius.com'
 axios.defaults.baseURL = baseUrl
 
 export const getArticle = date => axios.post('/articles', { date })

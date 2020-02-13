@@ -18,7 +18,7 @@
             type="dot"
             v-for="(tag, index) in item.tags"
             :key="index"
-            :color="getType()"
+            :color="color()"
           >
             {{tag}}
           </Tag>
@@ -38,7 +38,7 @@ export default {
     articles: 'articles'
   }),
   methods: {
-    getType () {
+    color () {
       const types = ['success', 'primary', 'warning', 'error']
       return _.sample(types)
     },

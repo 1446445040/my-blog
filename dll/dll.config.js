@@ -4,15 +4,15 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const library = require('./library.js')
 
 // dll文件存放的目录
-const dllPath = 'public/vendors'
-
+const dllPath = '../public/vendors'
+console.log(__dirname)
 module.exports = {
   entry: {
     // 需要提取的库文件
     ...library
   },
   output: {
-    path: path.join(__dirname, dllPath),
+    path: path.resolve(__dirname, dllPath),
     filename: '[name].dll.js',
     // vendor.dll.js中暴露出的全局变量名
     // 保持与 webpack.DllPlugin 中名称一致

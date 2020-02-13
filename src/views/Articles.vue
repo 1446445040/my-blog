@@ -50,15 +50,18 @@ export default {
       this.$on('hook:destroyed', () => {
         this.$Loading.destroy()
       })
-      this.$refs.content.querySelectorAll('pre code').forEach(block => {
-        const worker = new Worker('/workers/hl.worker.js')
-        worker.onmessage = event => {
-          block.innerHTML = event.data
-          worker.terminate() // 关闭worker
-          this.$emit('finish')
-        }
-        worker.postMessage(block.textContent)
-      })
+      const blocks = this.$refs.content.querySelectorAll('pre code')
+      const codes = blocks.map(node => node.textContent)
+      const worker = new Worker('/workers/hl.worker.js')
+      worker.postMessage(codes)
+      worker.onmessage = event => {
+        const lightedHTML = event.data
+        lightedHTML.forEach((html, index) => {
+          blocks[index].innerHTML = html
+        })
+        worker.terminate() // 关闭worker
+        this.$emit('finish')
+      }
     },
     reset () {
       // 重置dom元素属性
