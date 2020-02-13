@@ -38,5 +38,10 @@ export default {
 
 <style scoped lang="stylus">
   .page
+    width max-content
+    margin 0 auto
     background-color white
+  @media only screen and (max-width: 720px)
+    .page
+      width 100%
 </style>

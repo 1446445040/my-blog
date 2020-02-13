@@ -1,12 +1,23 @@
 const BundleAnalyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const LodashWebpackPlugin = require('lodash-webpack-plugin')
-const webpack = require('webpack')
-const library = require('./dll/library.js')
-const DllPath = './public/vendors'
 
 module.exports = {
   configureWebpack: config => {
+    Object.assign(config.optimization.splitChunks.cacheGroups, {
+      'view-design': { // 分离组件库
+        name: true,
+        test: /[\\/]view-design[\\/]/,
+        priority: 10,
+        chunks: 'initial'
+      },
+      vue: { // 分离vue全家桶
+        name: true,
+        test: /[\\/]vue(.+?)[\\/]/,
+        priority: 5,
+        chunks: 'initial'
+      }
+    })
     config.module.rules.push({
       test: /\.worker\.js$/,
       use: {
@@ -17,32 +28,14 @@ module.exports = {
       }
     })
     config.plugins.push(
-      ...Object.keys(library).map(vendor => {
-        return new webpack.DllReferencePlugin({
-          context: __dirname,
-          manifest: require(`${DllPath}/${vendor}-manifest.json`)
-        })
-      })
+      new LodashWebpackPlugin()
     )
   },
   chainWebpack: config => {
-    config.optimization.splitChunks({
-      cacheGroups: {
-        common: {
-          name: 'common',
-          chunks: 'all',
-          minSize: 20,
-          minChunks: 2
-        }
-      }
-    })
-    config.plugin('lodash').use(LodashWebpackPlugin).end()
     if (process.env.NODE_ENV === 'production') {
       config.externals({
         marked: 'marked',
-        moment: 'moment',
         jquery: '$'
-        // 'vue-design': 'ViewUI',
       })
       config.plugin('analyzer').use(BundleAnalyzer).end()
       config.plugin('compress').use(CompressionWebpackPlugin, [{

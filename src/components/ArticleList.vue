@@ -56,7 +56,8 @@ export default {
     text-overflow ellipsis
   .list-container
     padding 10px
-    width 720px
+    max-width 720px
+    min-height 100vh
     margin 0 auto
   .list-item
     margin 10px 0
@@ -70,7 +71,4 @@ export default {
       margin 10px 0
     .tags
       margin 0 10px
-  @media only screen and (max-width: 720px)
-    .list-container
-      width 100%
 </style>

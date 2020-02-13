@@ -51,7 +51,7 @@ export default {
         this.$Loading.destroy()
       })
       const blocks = this.$refs.content.querySelectorAll('pre code')
-      const codes = blocks.map(node => node.textContent)
+      const codes = Array.from(blocks).map(node => node.textContent)
       const worker = new Worker('/workers/hl.worker.js')
       worker.postMessage(codes)
       worker.onmessage = event => {
