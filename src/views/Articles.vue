@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import $ from 'jquery'
 import _ from 'lodash'
 import { getArticle } from '../api'
 
@@ -36,20 +35,14 @@ export default {
   watch: {
     curHeader (newVal, oldVal) {
       try {
-        $(this.cataItems[oldVal]).removeClass('active')
+        this.cataItems[oldVal].classList.remove('active')
       } catch (e) {}
-      $(this.cataItems[newVal]).addClass('active')
+      this.cataItems[newVal].classList.add('active')
     }
   },
   methods: {
     highlight () {
-      this.$Loading.start()
-      this.$once('finish', () => {
-        this.$Loading.finish()
-      })
-      this.$on('hook:destroyed', () => {
-        this.$Loading.destroy()
-      })
+      this.$Loading.start() // 顶部滚动条
       const blocks = this.$refs.content.querySelectorAll('pre code')
       const codes = Array.from(blocks).map(node => node.textContent)
       const worker = new Worker('/workers/hl.worker.js')
@@ -60,8 +53,12 @@ export default {
           blocks[index].innerHTML = html
         })
         worker.terminate() // 关闭worker
-        this.$emit('finish')
+        this.$Loading.finish()
       }
+      // 组件销毁则撤销进度条
+      this.$on('hook:destroyed', () => {
+        this.$Loading.destroy()
+      })
     },
     reset () {
       // 重置dom元素属性
@@ -75,7 +72,7 @@ export default {
     bindScroll () {
       const list = this.$refs.content.querySelectorAll('h1, h2, h3')
       const handler = event => {
-        const scrollTop = $(document).scrollTop()
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         list.forEach((item, index) => {
           if (scrollTop > item.offsetTop) {
             this.curHeader = index
@@ -87,42 +84,42 @@ export default {
         window.onscroll = null
       })
     },
+    // 映射标题的结构
     analyze () {
-      const div = document.createElement('div')
-      div.innerHTML = this.content
-      const list = []
-      div.querySelectorAll('h1, h2, h3').forEach((h, index) => {
+      const fg = document.createElement('fragment')
+      fg.innerHTML = this.content
+      return [...fg.querySelectorAll('h1, h2, h3')].map((h, index) => {
         const id = `header-${index + 1}`
         if (h.nodeName.endsWith('1')) {
-          list.push({
+          return {
             id: id,
             level: 1,
             className: 'title-1',
             content: h.textContent
-          })
+          }
         } else if (h.nodeName.endsWith('2')) {
-          list.push({
+          return {
             id: id,
             level: 2,
             className: 'title-2',
             content: h.textContent
-          })
+          }
         } else if (h.nodeName.endsWith('3')) {
-          list.push({
+          return {
             id: id,
             level: 3,
             className: 'title-3',
             content: h.textContent
-          })
+          }
         }
       })
-      return list
     },
     createCatalogue () {
-      const temp1 = []
-      const temp2 = []
-      const temp3 = []
-      this.analyze().forEach((item, index, arr) => {
+      const temp2 = [] // 二级标题
+      const temp3 = [] // 三级标题
+      const headers = this.analyze()
+      // 拼接目录结构
+      this.catalogue = headers.reduce((result, item, index, arr) => {
         const li = `
           <li class="${item.className} ${item.id}"}">
               <a href="#${item.id}">${item.content}</a>
@@ -133,16 +130,16 @@ export default {
           if (temp2.length !== 0 && temp3.length !== 0) {
             temp2.push(`<ul>${temp3.join('')}</ul>`) // 打包3放进2
             temp3.splice(0)
-            temp1.push(`<ul>${temp2.join('')}</ul>`) // 打包2放进1
+            result.push(`<ul>${temp2.join('')}</ul>`) // 打包2放进1
             temp2.splice(0)
           } else if (temp2.length === 0 && temp3.length !== 0) {
-            temp1.push(`<ul>${temp3.join('')}</ul>`) // 打包3放进1
+            result.push(`<ul>${temp3.join('')}</ul>`) // 打包3放进1
             temp3.splice(0)
           } else if (temp2.length !== 0 && temp3.length === 0) {
-            temp1.push(`<ul>${temp2.join('')}</ul>`) // 打包2放进1
+            result.push(`<ul>${temp2.join('')}</ul>`) // 打包2放进1
             temp2.splice(0)
           }
-          temp1.push(li)
+          result.push(li)
         } else if (item.level === 2) {
           // 先判断三级标题有没有，有的话就嵌套进来
           if (temp3.length !== 0) {
@@ -158,11 +155,11 @@ export default {
             temp2.push(`<ul>${temp3.join('')}</ul>`)
             temp3.splice(0)
           }
-          temp1.push(`<ul>${temp2.join('')}</ul>`)
+          result.push(`<ul>${temp2.join('')}</ul>`)
           temp2.splice(0)
         }
-      })
-      this.catalogue = temp1.join('') // 触发dom更新
+        return result
+      }, []).join('')
       this.$nextTick(() => {
         this.cataItems = this.$refs.catalogue.querySelectorAll('li')
       })

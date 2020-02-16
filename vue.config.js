@@ -34,8 +34,7 @@ module.exports = {
   chainWebpack: config => {
     if (process.env.NODE_ENV === 'production') {
       config.externals({
-        marked: 'marked',
-        jquery: '$'
+        marked: 'marked'
       })
       config.plugin('analyzer').use(BundleAnalyzer).end()
       config.plugin('compress').use(CompressionWebpackPlugin, [{

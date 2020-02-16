@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import 'view-design/dist/styles/iview.css' // 采用CDN引入
 import {
   Tag, Time, LoadingBar, Message, List,
   Form, FormItem, Button, Input, Icon, Layout, Header,

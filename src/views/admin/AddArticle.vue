@@ -18,8 +18,8 @@
           v-if="inputVisible"
           v-model="inputValue"
           ref="saveTagInput"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
+          @on-enter="handleInputConfirm"
+          @on-blur="handleInputConfirm"
         />
         <Button
           v-else
@@ -93,6 +93,7 @@ export default {
       if (inputValue && this.form.tags.length < 3) {
         this.form.tags.push(inputValue)
       }
+      debugger
       this.inputVisible = false
       this.inputValue = ''
     },

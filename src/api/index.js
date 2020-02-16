@@ -1,5 +1,5 @@
 import axios from 'axios'
-// const baseUrl = 'https://localhost'
+// const baseUrl = 'http://localhost:3000'
 const baseUrl = 'https://www.biubiubius.com'
 axios.defaults.baseURL = baseUrl
 
