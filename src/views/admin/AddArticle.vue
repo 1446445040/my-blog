@@ -10,7 +10,8 @@
           :key="index"
           closable
           type="dot"
-          @on-close="handleClose(index, tag)">
+          @on-close="handleClose(index, tag)"
+        >
           {{tag}}
         </Tag>
         <Input

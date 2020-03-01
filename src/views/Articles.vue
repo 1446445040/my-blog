@@ -13,6 +13,8 @@
       <ul v-html="catalogue" ref="catalogue"/>
     </nav>
 
+    <!--返回顶部-->
+    <BackTop/>
   </div>
 </template>
 
@@ -168,16 +170,18 @@ export default {
   created () {
     this.$Message.loading('正在加载')
     const { date } = this.$route.params
-    getArticle(date).then(({ data }) => {
-      this.content = data
-      this.$nextTick(() => {
-        this.showArticle = true // 合适的时机显示，防止页面显示不全影响体验
-        this.highlight() // 高亮代码块
-        this.createCatalogue() // 创建目录
-        this.bindScroll() // 滚动监听
-        this.reset() // 设置部分dom元素的属性
+    setTimeout(() => {
+      getArticle(date).then(({ data }) => {
+        this.content = data
+        this.$nextTick(() => {
+          this.showArticle = true // 合适的时机显示，防止页面显示不全影响体验
+          this.highlight() // 高亮代码块
+          this.createCatalogue() // 创建目录
+          this.bindScroll() // 滚动监听
+          this.reset() // 设置部分dom元素的属性
+        })
       })
-    })
+    }, 200)
   }
 }
 </script>

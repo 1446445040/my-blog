@@ -2,12 +2,13 @@ import Vue from 'vue'
 import {
   Tag, Time, LoadingBar, Message, List,
   Form, FormItem, Button, Input, Icon, Layout, Header,
-  Card, Menu, MenuItem, Content
+  Card, Menu, MenuItem, Content, BackTop
 } from 'view-design'
 
 Vue.prototype.$Message = Message
 Vue.prototype.$Loading = LoadingBar
 
+Vue.component('BackTop', BackTop)
 Vue.component('Tag', Tag)
 Vue.component('Time', Time)
 Vue.component('List', List)

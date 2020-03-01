@@ -60,7 +60,14 @@ export default {
     min-height 100vh
     margin 0 auto
   .list-item
+    padding 10px
     margin 10px 0
+    border-radius 5px
+    background-color white
+    transition all 1s ease
+    &:hover
+      box-shadow 0 0 50px lightgrey
+      transform scale(1.1)
     .header
       font-size 20px
       font-weight bold
